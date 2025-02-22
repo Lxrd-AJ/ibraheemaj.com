@@ -6,6 +6,9 @@ Continue with the tutorial at https://docs.astro.build/en/tutorial/2-pages/
 ## Jupyter Notebook Conversion
 Ensure pandoc installed. See https://github.com/jupyter/nbconvert for more info. Usually this is as trivial as running `brew install pandoc`.
 
+## Useful tools
+* `papermill`: for jupyter notebooks
+
 
 # TODOs
 - [ ] Custom domain for the blog
