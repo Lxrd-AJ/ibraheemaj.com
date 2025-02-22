@@ -1,15 +1,30 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const pageTitle = "About me (const property)";
+const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Writing Docs"];
+const happy = true;
+const finished = false;
+const goal = 3;
 ---
 
-<Layout title="About">
+<Layout title={pageTitle}>
 	<main>
         <a href="/">Home</a>
         <a href="/about/">About</a>
         <a href="/blog/">Blog</a>
 
-		<h1>About page!</h1>
+		<h1>{pageTitle}</h1>
         <p>A work in progress using the AstroJS framework.</p>
+
+        <p>My skills are: </p>
+        <ul>
+            {skills.map((skill) => <li>{skill}</li>)}
+        </ul>
+
+        {happy && <p>I am happy to learn Astro</p>}
+        {finished && <p>I finished this tutorial!</p>}
+        {goal == 3 ? <p>My goal is to finish == {String(finished)} this tutorial</p> : <p>My goal is to learn Astro</p>}
 	</main>
 </Layout>
 
