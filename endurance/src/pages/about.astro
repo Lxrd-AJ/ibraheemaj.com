@@ -1,11 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import "../styles/global.css";
 
 const pageTitle = "About me (const property)";
 const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Writing Docs"];
 const happy = true;
 const finished = false;
 const goal = 3;
+
+const skillColour = "navy";
 ---
 
 <Layout title={pageTitle}>
@@ -19,7 +22,7 @@ const goal = 3;
 
         <p>My skills are: </p>
         <ul>
-            {skills.map((skill) => <li>{skill}</li>)}
+            {skills.map((skill) => <li class="skill">{skill}</li>)}
         </ul>
 
         {happy && <p>I am happy to learn Astro</p>}
@@ -28,7 +31,7 @@ const goal = 3;
 	</main>
 </Layout>
 
-<style>
+<style define:vars={{skillColour}}>
 	main {
 		margin: auto;
 		padding: 1rem;
@@ -39,10 +42,16 @@ const goal = 3;
 	}
 	
 	h1 {
+        color: purple;
 		font-size: 4rem;
 		font-weight: 700;
 		line-height: 1;
 		text-align: center;
 		margin-bottom: 1em;
 	}
+
+    .skill {
+        color: var(--skillColour);
+        font-weight: bold;
+    }
 </style>

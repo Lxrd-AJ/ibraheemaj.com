@@ -1,6 +1,6 @@
 # ibraheemaj.com
 
-Continue with the tutorial at https://docs.astro.build/en/tutorial/2-pages/ 
+Continue with the tutorial at https://docs.astro.build/en/tutorial/3-components/ 
 
 # Process
 ## Jupyter Notebook Conversion
