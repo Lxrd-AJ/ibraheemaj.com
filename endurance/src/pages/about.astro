@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
 import "../styles/global.css";
 
 const pageTitle = "About me (const property)";
@@ -13,9 +14,7 @@ const skillColour = "navy";
 
 <Layout title={pageTitle}>
 	<main>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/blog/">Blog</a>
+        <Header />
 
 		<h1>{pageTitle}</h1>
         <p>A work in progress using the AstroJS framework.</p>

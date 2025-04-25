@@ -1,0 +1,20 @@
+---
+const platform = "github";
+const username = "lxrd-aj";
+
+import Social from "./Social.astro";
+---
+
+<style>
+    footer {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+</style>
+
+<footer>
+    <p>Learn more about my projects, see </p>
+    <Social platform="github" username={username} />
+    <Social platform="youtube" username="astrodotbuild" />
+</footer>
