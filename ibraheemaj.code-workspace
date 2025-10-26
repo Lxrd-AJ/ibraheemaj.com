@@ -1,0 +1,27 @@
+{
+    "folders": [
+        {"path": "."}
+    ],
+    "launch": {
+        "configurations": [
+            {
+                "type": "swift",
+                "request": "launch",
+                "args": [],
+                "cwd": "${workspaceFolder:ibraheemaj.com}/tools",
+                "name": "Debug 1bbb (ibraheemaj.com/tools)",
+                "program": "${workspaceFolder:ibraheemaj.com}/tools/.build/debug/1bbb",
+                "preLaunchTask": "swift: Build Debug 1bbb (ibraheemaj.com/tools)"
+            },
+            {
+                "type": "swift",
+                "request": "launch",
+                "args": [],
+                "cwd": "${workspaceFolder:ibraheemaj.com}/tools",
+                "name": "Release 1bbb (ibraheemaj.com/tools)",
+                "program": "${workspaceFolder:ibraheemaj.com}/tools/.build/release/1bbb",
+                "preLaunchTask": "swift: Build Release 1bbb (ibraheemaj.com/tools)"
+            }
+        ]
+    }
+}

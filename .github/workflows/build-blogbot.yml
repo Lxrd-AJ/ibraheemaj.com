@@ -1,0 +1,34 @@
+name: Build blogbot
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - 'tools/blogbot/**'
+
+jobs:
+    build:
+        runs-on: macos-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                    fetch-depth: 0
+                    persist-credentials: true
+
+            - name: Build blogbot (release)
+              working-directory: tools/blogbot
+              run: |
+                    set -e
+                    swift build -c release
+                    BIN_DIR="$(swift build -c release --show-bin-path)"
+                    mkdir -p bin
+                    cp "$BIN_DIR/1bbb" ./bin/1bbb
+                    chmod +x ./bin/1bbb
+                    ls -lh ./bin/1bbb
+            - name: Upload blogbot binary artifact
+              uses: actions/upload-artifact@v3
+              with:
+                  name: blogbot-binary
+                  path: ./tools/blogbot/bin/1bbb
