@@ -6,9 +6,10 @@ on:
             - main
         paths:
             - 'tools/blogbot/**'
+    workflow_dispatch:
 
 jobs:
-    build:
+    build-tools-blogbot:
         runs-on: macos-latest
         steps:
             - name: Checkout repository
