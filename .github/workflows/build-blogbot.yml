@@ -28,6 +28,9 @@ jobs:
                     cp "$BIN_DIR/1bbb" ./bin/1bbb
                     chmod +x ./bin/1bbb
                     ls -lh ./bin/1bbb
+            - name: Build blog articles list
+              run: |
+                    ./bin/1bbb --articles-file articles.txt
             - name: Upload blogbot binary artifact
               uses: actions/upload-artifact@v4
               with:

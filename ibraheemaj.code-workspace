@@ -21,6 +21,26 @@
                 "name": "Release 1bbb (ibraheemaj.com/tools)",
                 "program": "${workspaceFolder:ibraheemaj.com}/tools/.build/release/1bbb",
                 "preLaunchTask": "swift: Build Release 1bbb (ibraheemaj.com/tools)"
+            },
+            {
+                "type": "swift",
+                "request": "launch",
+                "args": [],
+                "cwd": "${workspaceFolder:ibraheemaj.com}/tools/blogbot",
+                "name": "Debug 1bbb (ibraheemaj.com/tools/blogbot)",
+                "target": "1bbb",
+                "configuration": "debug",
+                "preLaunchTask": "swift: Build Debug 1bbb (ibraheemaj.com/tools/blogbot)"
+            },
+            {
+                "type": "swift",
+                "request": "launch",
+                "args": [],
+                "cwd": "${workspaceFolder:ibraheemaj.com}/tools/blogbot",
+                "name": "Release 1bbb (ibraheemaj.com/tools/blogbot)",
+                "target": "1bbb",
+                "configuration": "release",
+                "preLaunchTask": "swift: Build Release 1bbb (ibraheemaj.com/tools/blogbot)"
             }
         ]
     }

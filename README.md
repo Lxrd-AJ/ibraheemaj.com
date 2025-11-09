@@ -1,8 +1,10 @@
 # ibraheemaj.com
 
-Continue with the tutorial at https://docs.astro.build/en/tutorial/3-components/ 
 
 # Process
+## Run `1bbb`
+* Development: Run `swift run --package-path tools/blogbot 1bbb --articles-file articles.txt`
+
 ## Jupyter Notebook Conversion
 Ensure pandoc installed. See https://github.com/jupyter/nbconvert for more info. Usually this is as trivial as running `brew install pandoc`.
 
