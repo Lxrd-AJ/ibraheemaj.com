@@ -48,4 +48,4 @@ jobs:
             - name: Deploy blog articles list
               run: |
                     chmod +x ./1bbb
-                    ./1bbb --articles-file articles.txt --deploy
+                    ./1bbb --articles-file articles.txt
