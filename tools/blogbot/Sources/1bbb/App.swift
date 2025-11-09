@@ -1,5 +1,6 @@
 import Foundation
 import ArgumentParser
+import Subprocess
 
 let BUILD_DIR = ".build-articles"
 
@@ -18,17 +19,20 @@ struct App: AsyncParsableCommand {
         try createBuildDirectory()
 
         let articles = try getArticles()
+        // An optimisation for later is to process articles concurrently.
         for article in articles {
-            try processArticle(article)
+            try await processArticle(article)
         }
     }
 
-    func processArticle(_ article: String) throws {
+    func processArticle(_ article: Article) async throws {
         // Placeholder for article processing logic.
         print("Processing article: \(article)")
-        let articleName = String(article.split(separator: "/").last!)
-        let articleDirectory = URL(fileURLWithPath: BUILD_DIR, isDirectory: true).appendingPathComponent(articleName)
-        print(articleDirectory)
+        let articleDirectory = URL(fileURLWithPath: BUILD_DIR, isDirectory: true).appendingPathComponent(article.name)
+        
+        try await article.cloned(to: articleDirectory.path)
+        
+        print("\t -> Cloned article to: \(articleDirectory.path)")
     }
 
     func createBuildDirectory() throws {
@@ -41,11 +45,11 @@ struct App: AsyncParsableCommand {
         try FileManager.default.removeItem(at: buildDir)
     }
 
-    func getArticles() throws -> [String] {
+    func getArticles() throws -> [Article] {
            // read the lines in the file `articlesFile`
         let fileURL = URL(fileURLWithPath: articlesFile)
         let fileContents = try String(contentsOf: fileURL, encoding: .utf8)
         // create a web url for each line
-        return fileContents.split(separator: "\n").map { String($0) }
+        return fileContents.split(separator: "\n").map { Article(urlString: String($0)) }
     }
 }
