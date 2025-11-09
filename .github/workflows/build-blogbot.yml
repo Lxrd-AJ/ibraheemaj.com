@@ -1,4 +1,4 @@
-name: Build blogbot
+name: Deploy Blog Articles
 
 on:
     push:
@@ -28,12 +28,24 @@ jobs:
                     cp "$BIN_DIR/1bbb" ./bin/1bbb
                     chmod +x ./bin/1bbb
                     ls -lh ./bin/1bbb
-            - name: Build blog articles list
-              run: |
-                    ./bin/1bbb --articles-file articles.txt
             - name: Upload blogbot binary artifact
               uses: actions/upload-artifact@v4
               with:
                   name: blogbot-binary
                   path: ./tools/blogbot/bin/1bbb
                   overwrite: true
+    
+    deploy-blog-articles:
+        needs: build-tools-blogbot
+        runs-on: macos-26
+        steps:
+            - name: Build Blog aritcles List
+              uses: actions/download-artifact@v4
+              with:
+                  name: blogbot-binary
+            # - name: Checkout repository
+            #   uses: actions/checkout@v4
+            - name: Deploy blog articles list
+              run: |
+                    chmod +x ./1bbb
+                    ./1bbb --articles-file articles.txt --deploy
