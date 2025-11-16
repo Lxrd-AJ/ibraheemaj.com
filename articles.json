@@ -1,0 +1,13 @@
+[
+	{
+		"name": "vision-transformers",
+		"repo": "https://github.com/Lxrd-AJ/vision-transformers",
+		"articleMetadata": {
+			"theme": "computer-vision"
+		},
+		"notebooks": [
+			"vit-patch-embedding.ipynb",
+			"vit-cifar10.ipynb"
+		]
+	}
+]

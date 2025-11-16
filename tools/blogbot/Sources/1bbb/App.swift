@@ -2,13 +2,17 @@ import Foundation
 import ArgumentParser
 import Subprocess
 
-let BUILD_DIR = ".build-articles"
+let BUILD_DIR = ".build-repos"
+
+enum AppError: Error {
+    case failedToClone(url: String)
+}
 
 @main
 struct App: AsyncParsableCommand {
 
-    @Option(help: "Path to a list of articles to process.")
-    public var articlesFile: String
+    @Option(help: "Path to a list of repos to process.")
+    public var reposFile: String
 
     mutating func run() async throws {
         #if DEBUG
@@ -18,21 +22,21 @@ struct App: AsyncParsableCommand {
         #endif
         try createBuildDirectory()
 
-        let articles = try getArticles()
-        // An optimisation for later is to process articles concurrently.
-        for article in articles {
-            try await processArticle(article)
+        let repos = try getRepositories()
+        // An optimisation for later is to process repos concurrently.
+        for repo in repos {
+            try await processRepositories(repo)
         }
     }
 
-    func processArticle(_ article: Article) async throws {
-        // Placeholder for article processing logic.
-        print("Processing article: \(article)")
-        let articleDirectory = URL(fileURLWithPath: BUILD_DIR, isDirectory: true).appendingPathComponent(article.name)
+    func processRepositories(_ repo: Repository) async throws {
+        // Placeholder for repo processing logic.
+        print("Processing repo: \(repo.name)")
+        let repoDirectory = URL(fileURLWithPath: BUILD_DIR, isDirectory: true).appending(path: repo.name)
         
-        try await article.cloned(to: articleDirectory.path)
+        try await repo.cloned(to: repoDirectory.path)
         
-        print("\t -> Cloned article to: \(articleDirectory.path)")
+        print("\t -> Cloned repo to: \(repoDirectory.path)")
 
         // Might have to add support for repo and ipynb file in repo
     }
@@ -44,14 +48,19 @@ struct App: AsyncParsableCommand {
 
     func deleteBuildDirectory() throws {
         let buildDir = URL(fileURLWithPath: BUILD_DIR, isDirectory: true)
-        try FileManager.default.removeItem(at: buildDir)
+        if FileManager.default.fileExists(atPath: buildDir.path()) {
+            try FileManager.default.removeItem(at: buildDir)
+        }
     }
 
-    func getArticles() throws -> [Article] {
-           // read the lines in the file `articlesFile`
-        let fileURL = URL(fileURLWithPath: articlesFile)
-        let fileContents = try String(contentsOf: fileURL, encoding: .utf8)
-        // create a web url for each line
-        return fileContents.split(separator: "\n").map { Article(urlString: String($0)) }
+    func getRepositories() throws -> [Repository] {
+           // read the lines in the file `reposFile`
+        let fileURL = URL(fileURLWithPath: reposFile)
+        let data = try Data(contentsOf: fileURL)
+        let configs = try JSONDecoder().decode([RepoConfig].self, from: data)
+
+        return configs.map({ config in
+            return Repository(config: config)
+        })
     }
 }

@@ -3,7 +3,7 @@
 
 # Process
 ## Run `1bbb`
-* Development: Run `swift run --package-path tools/blogbot 1bbb --articles-file articles.txt`
+* Development: Run `swift run --package-path tools/blogbot 1bbb --repos-file articles.json`
 
 ## Jupyter Notebook Conversion
 Ensure pandoc installed. See https://github.com/jupyter/nbconvert for more info. Usually this is as trivial as running `brew install pandoc`.
