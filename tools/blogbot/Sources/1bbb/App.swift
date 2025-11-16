@@ -33,6 +33,8 @@ struct App: AsyncParsableCommand {
         try await article.cloned(to: articleDirectory.path)
         
         print("\t -> Cloned article to: \(articleDirectory.path)")
+
+        // Might have to add support for repo and ipynb file in repo
     }
 
     func createBuildDirectory() throws {

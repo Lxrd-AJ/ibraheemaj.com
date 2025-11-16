@@ -43,8 +43,8 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   name: blogbot-binary
-            # - name: Checkout repository
-            #   uses: actions/checkout@v4
+            - name: Checkout repository
+              uses: actions/checkout@v4
             - name: Deploy blog articles list
               run: |
                     chmod +x ./1bbb
