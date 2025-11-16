@@ -38,7 +38,7 @@ struct App: AsyncParsableCommand {
         
         print("\t -> Cloned repo to: \(repo.buildDirectory)")
 
-        // Might have to add support for repo and ipynb file in repo
+        
     }
 
     func createBuildDirectory() throws {
