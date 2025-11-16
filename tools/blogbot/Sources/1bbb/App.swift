@@ -2,7 +2,7 @@ import Foundation
 import ArgumentParser
 import Subprocess
 
-let BUILD_DIR = ".build-repos"
+let BUILD_DIR = URL(fileURLWithPath: ".build-repos", isDirectory: true)
 
 enum AppError: Error {
     case failedToClone(url: String)
@@ -32,24 +32,22 @@ struct App: AsyncParsableCommand {
     func processRepositories(_ repo: Repository) async throws {
         // Placeholder for repo processing logic.
         print("Processing repo: \(repo.name)")
-        let repoDirectory = URL(fileURLWithPath: BUILD_DIR, isDirectory: true).appending(path: repo.name)
+        // let repoDirectory = URL(fileURLWithPath: BUILD_DIR, isDirectory: true).appending(path: repo.name)
         
-        try await repo.cloned(to: repoDirectory.path)
+        try await repo.clone()
         
-        print("\t -> Cloned repo to: \(repoDirectory.path)")
+        print("\t -> Cloned repo to: \(repo.buildDirectory)")
 
         // Might have to add support for repo and ipynb file in repo
     }
 
     func createBuildDirectory() throws {
-        let buildDir = URL(fileURLWithPath: BUILD_DIR, isDirectory: true)
-        try FileManager.default.createDirectory(at: buildDir, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: BUILD_DIR, withIntermediateDirectories: true)
     }
 
     func deleteBuildDirectory() throws {
-        let buildDir = URL(fileURLWithPath: BUILD_DIR, isDirectory: true)
-        if FileManager.default.fileExists(atPath: buildDir.path()) {
-            try FileManager.default.removeItem(at: buildDir)
+        if FileManager.default.fileExists(atPath: BUILD_DIR.path()) {
+            try FileManager.default.removeItem(at: BUILD_DIR)
         }
     }
 
@@ -60,7 +58,8 @@ struct App: AsyncParsableCommand {
         let configs = try JSONDecoder().decode([RepoConfig].self, from: data)
 
         return configs.map({ config in
-            return Repository(config: config)
+            let buildDirectory = BUILD_DIR.appending(path: config.name)
+            return Repository(config: config, buildDirectory: buildDirectory)
         })
     }
 }
