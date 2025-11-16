@@ -39,12 +39,13 @@ jobs:
         needs: build-tools-blogbot
         runs-on: macos-26
         steps:
-            - name: Build Blog aritcles List
+            - name: Download binaries
               uses: actions/download-artifact@v4
               with:
                   name: blogbot-binary
             - name: Install blogbot to /usr/local/bin
               run: |
+                    ls -la
                     set -e
                     # find the binary inside the extracted artifact and move it to /usr/local/bin
                     BIN_PATH="$(find ./blogbot-binary -type f -name 1bbb -print -quit)"
@@ -60,4 +61,4 @@ jobs:
             - name: Deploy blog articles list
               run: |
                     chmod +x ./1bbb
-                    ./1bbb --articles-file articles.txt
+                    ./1bbb --repos-file articles.json

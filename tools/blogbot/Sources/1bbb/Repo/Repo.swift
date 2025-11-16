@@ -6,6 +6,7 @@ struct Repository {
     let githubURL: String
     let theme: BlogTheme?
     let articles: [Article]
+    var buildDir: String?
 
     init(config: RepoConfig) {
         self.name = config.name
@@ -17,7 +18,7 @@ struct Repository {
         })
     }
 
-    func cloned(to directory: String) async throws {
+    mutating func cloned(to directory: String) async throws {
         let gitCloneResult = try await Subprocess.run(
             .name("git"), 
             arguments: ["clone", self.githubURL, directory],
@@ -27,5 +28,7 @@ struct Repository {
         guard gitCloneResult.terminationStatus == .exited(0) else {
             throw AppError.failedToClone(url: self.githubURL)
         }
+
+        self.buildDir = directory
     }
 }
