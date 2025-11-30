@@ -1,5 +1,6 @@
 import nbformat
 import argparse
+from pathlib import Path
 from nbconvert import MarkdownExporter
 from traitlets.config import Config
 from common import StripMagicCellsPreprocessor
@@ -17,6 +18,8 @@ def main():
     args = parser.parse_args()
 
     # Load the notebook
+    notebookName = args.input.split("/")[-1]
+    print(f"Converting notebook: {notebookName}")
     with open(args.input, "r", encoding="utf-8") as f:
         notebook = nbformat.read(f, as_version=4)
 
@@ -25,15 +28,20 @@ def main():
     config.MarkdownExporter.preprocessors = [StripMagicCellsPreprocessor]
     exporter = MarkdownExporter(config=config)
     markdown, info = exporter.from_notebook_node(notebook)
-    imageFiles = info.get('outputs', {})
-    for filename, data in imageFiles.items():
-        # with open(f".build/{filename}", "wb") as img_f:
-        #     img_f.write(data)
-        print(f"Found image: {filename} ({len(data)} bytes)")
     
     # Write the output to the specified file
+    buildDir = Path(args.output).parent
+    print(f"Ensuring build directory exists: {buildDir}")
+    buildDir.mkdir(parents=True, exist_ok=True)
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(markdown)
+    # Write out any extracted images to the build directory
+    imageFiles = info.get('outputs', {})
+    for filename, data in imageFiles.items():
+        targetFile = buildDir / filename
+        with open(targetFile, "wb") as img_f:
+            img_f.write(data)
+        print(f"Written image: {filename} ({len(data)} bytes)")
 
     print(f"Converted {args.input} to {args.output}")
 
