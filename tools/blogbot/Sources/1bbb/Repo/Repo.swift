@@ -31,4 +31,14 @@ struct Repository {
             throw AppError.failedToClone(url: self.githubURL)
         }
     }
+
+    func processArticles() async throws {
+        for (idx, article) in articles.enumerated() {
+            print("\t -> [\(idx+1)/\(self.articles.count)] Processing article: \(article.name)")
+            try await processArticle(article)
+        }
+    }
+
+    private func processArticle(_ article: Article) async throws {
+    }
 }

@@ -20,6 +20,7 @@ struct App: AsyncParsableCommand {
         print("\(debugBanner) [DEBUG mode] \(debugBanner)")
         try deleteBuildDirectory()
         #endif
+
         try createBuildDirectory()
 
         let repos = try getRepositories()
@@ -30,15 +31,12 @@ struct App: AsyncParsableCommand {
     }
 
     func processRepositories(_ repo: Repository) async throws {
-        // Placeholder for repo processing logic.
         print("Processing repo: \(repo.name)")
-        // let repoDirectory = URL(fileURLWithPath: BUILD_DIR, isDirectory: true).appending(path: repo.name)
         
         try await repo.clone()
-        
         print("\t -> Cloned repo to: \(repo.buildDirectory)")
-
-        
+        try await repo.processArticles()
+        print("\t -> Processed \(repo.articles.count) articles.")
     }
 
     func createBuildDirectory() throws {
