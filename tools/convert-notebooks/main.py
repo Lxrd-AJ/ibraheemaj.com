@@ -1,3 +1,10 @@
+# /// script
+# requires-python = ">=3.14"
+# dependencies = [
+#   "jupyter>=1.1.1",
+#   "nbconvert>=7.16.6",
+# ]
+# ///
 import nbformat
 import argparse
 from pathlib import Path
@@ -13,12 +20,12 @@ Documentation links:
 """
 def main():
     parser = argparse.ArgumentParser(description="Convert Jupyter Notebooks to Markdown")
-    parser.add_argument("input", help="Path to the input Jupyter Notebook (.ipynb) file")
+    parser.add_argument("input", type=Path, help="Path to the input Jupyter Notebook (.ipynb) file")
     parser.add_argument("output", help="Path to the output Markdown file")
     args = parser.parse_args()
 
     # Load the notebook
-    notebookName = args.input.split("/")[-1]
+    notebookName = args.input.name
     print(f"Converting notebook: {notebookName}")
     with open(args.input, "r", encoding="utf-8") as f:
         notebook = nbformat.read(f, as_version=4)
