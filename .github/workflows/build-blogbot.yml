@@ -1,4 +1,4 @@
-name: Deploy Blog Articles
+name: Generate Blog Articles
 
 on:
     push:
