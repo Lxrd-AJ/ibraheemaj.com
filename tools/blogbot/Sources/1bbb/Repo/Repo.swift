@@ -32,13 +32,44 @@ struct Repository {
         }
     }
 
-    func processArticles() async throws {
+    func processArticles(markdownScript conversionScript: String) async throws {
         for (idx, article) in articles.enumerated() {
             print("\t -> [\(idx+1)/\(self.articles.count)] Processing article: \(article.name)")
-            try await processArticle(article)
+            try await processArticle(article, using: conversionScript)
         }
     }
 
-    private func processArticle(_ article: Article) async throws {
+    private func processArticle(_ article: Article, using script: String) async throws {
+        let articleNotebook = self.buildDirectory
+            .appendingPathComponent(article.name, isDirectory: false)
+        let articleNameWithoutExtension = articleNotebook
+            .deletingPathExtension()
+            .lastPathComponent
+        let articleMarkdown = self.buildDirectory
+            .appendingPathComponent("markdown-builds", isDirectory: true)
+            .appendingPathComponent(articleNameWithoutExtension, isDirectory: true)
+            .appendingPathComponent(articleNameWithoutExtension, isDirectory: false)
+            .appendingPathExtension("md")
+        let processCommand = try await Subprocess.run(
+            .name("uv"),
+            arguments: [
+                "run",
+                "--script",
+                script,
+                articleNotebook.path(),
+                articleMarkdown.path()
+            ],
+            output: .string(limit: 4096)
+        )
+
+        #if(DEBUG)
+        if let output = processCommand.standardOutput {
+            print("Command Output:\n \(output)")
+        }
+        #endif
+
+        guard processCommand.terminationStatus == .exited(0) else {
+            throw AppError.failedToProcessArticle(name: article.name)
+        }
     }
 }

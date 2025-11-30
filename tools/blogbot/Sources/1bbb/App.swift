@@ -6,6 +6,7 @@ let BUILD_DIR = URL(fileURLWithPath: ".build-repos", isDirectory: true)
 
 enum AppError: Error {
     case failedToClone(url: String)
+    case failedToProcessArticle(name: String)
 }
 
 @main
@@ -13,6 +14,9 @@ struct App: AsyncParsableCommand {
 
     @Option(help: "Path to a list of repos to process.")
     public var reposFile: String
+
+    @Option(help: "Path to the markdown conversion script.")
+    public var conversionScript: String = "tools/convert-notebooks/main.py"
 
     mutating func run() async throws {
         #if DEBUG
@@ -35,7 +39,7 @@ struct App: AsyncParsableCommand {
         
         try await repo.clone()
         print("\t -> Cloned repo to: \(repo.buildDirectory)")
-        try await repo.processArticles()
+        try await repo.processArticles(markdownScript: self.conversionScript)
         print("\t -> Processed \(repo.articles.count) articles.")
     }
 

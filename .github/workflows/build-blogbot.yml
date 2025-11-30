@@ -35,7 +35,7 @@ jobs:
                   path: ./tools/blogbot/bin/1bbb
                   overwrite: true
     
-    deploy-blog-articles:
+    generate-blog-articles:
         needs: build-tools-blogbot
         runs-on: macos-26
         steps:
@@ -45,8 +45,15 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   name: blogbot-binary
-            - name: Deploy blog articles list
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+              with:
+                  version: '0.9.13'
+            - name: Generate blog articles
               run: |
                     ls -la
                     chmod +x ./1bbb
-                    ./1bbb --repos-file articles.json
+                    ./1bbb --repos-file articles.json --conversion-script tools/convert-notebooks/main.py
+            - name: Show build directory
+              run: |
+                    ls -la .build-repos
