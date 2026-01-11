@@ -1,10 +1,11 @@
 import Foundation
 
-// Currently contains 
 struct Article {
     let name: String
+    let frontmatter: RepoConfig.Frontmatter
 
-    init(name: String) {
+    init(name: String, frontmatter: RepoConfig.Frontmatter) {
         self.name = name
+        self.frontmatter = frontmatter
     }
 }

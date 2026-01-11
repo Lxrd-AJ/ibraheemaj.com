@@ -1,16 +1,9 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 
-// Load all posts from the posts directory (md, mdx, astro)
-const modules = import.meta.glob('./posts/**/*.{md,mdx,astro}');
-const posts = Object.entries(modules).map(([path, mod]) => {
-	// Extract slug from the file path, respecting nested directories
-	const slug = path
-		.replace('./posts/', '')
-		.replace(/\.(md|mdx|astro)$/, '');
-    return { slug };
-});
+const posts = await getCollection("blog");
 ---
 
 <Layout title="Blog Posts">
@@ -24,8 +17,8 @@ const posts = Object.entries(modules).map(([path, mod]) => {
         <ul>
             {posts.map(post => (
                 <li>
-                    <a href={`/posts/${post.slug}`}>
-                        {post.slug}
+                    <a href={`/blog/${post.slug}`}>
+                        {post.data.title}
                     </a>
                 </li>
             ))}

@@ -18,6 +18,7 @@ Documentation links:
     - https://nbconvert.readthedocs.io/en/latest/api/
 - nbformat: https://nbformat.readthedocs.io/
 """
+
 def main():
     parser = argparse.ArgumentParser(description="Convert Jupyter Notebooks to Markdown")
     parser.add_argument("input", type=Path, help="Path to the input Jupyter Notebook (.ipynb) file")
@@ -37,10 +38,11 @@ def main():
     markdown, info = exporter.from_notebook_node(notebook)
     
     # Write the output to the specified file
-    buildDir = Path(args.output).parent
+    outputPath = Path(args.output)
+    buildDir = outputPath.parent
     print(f"Ensuring build directory exists: {buildDir}")
     buildDir.mkdir(parents=True, exist_ok=True)
-    with open(args.output, "w", encoding="utf-8") as f:
+    with open(outputPath, "w", encoding="utf-8") as f:
         f.write(markdown)
     # Write out any extracted images to the build directory
     imageFiles = info.get('outputs', {})

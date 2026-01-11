@@ -14,7 +14,24 @@ struct Repository {
         self.theme = config.articleMetadata?.theme
 
         self.articles = config.notebooks.map({ notebook in 
-            return Article(name: notebook)
+            // Merge defaults and specific fields
+            let title = notebook.title ?? config.defaults?.title
+            let description = notebook.description ?? config.defaults?.description
+            let pubDate = notebook.pubDate ?? config.defaults?.pubDate
+            let author = notebook.author ?? config.defaults?.author
+            let tags = (config.defaults?.tags ?? []) + (notebook.tags ?? [])
+            let image = notebook.image ?? config.defaults?.image
+            
+            let mergedFrontmatter = RepoConfig.Frontmatter(
+                title: title,
+                description: description,
+                pubDate: pubDate,
+                author: author,
+                tags: tags.isEmpty ? nil : tags,
+                image: image
+            )
+            
+            return Article(name: notebook.file, frontmatter: mergedFrontmatter)
         })
 
         self.buildDirectory = buildDirectory
@@ -45,11 +62,17 @@ struct Repository {
         let articleNameWithoutExtension = articleNotebook
             .deletingPathExtension()
             .lastPathComponent
-        let articleMarkdown = self.buildDirectory
+        let articleMarkdownDir = self.buildDirectory
             .appendingPathComponent("markdown-builds", isDirectory: true)
             .appendingPathComponent(articleNameWithoutExtension, isDirectory: true)
+            
+        // Ensure directory exists
+        try FileManager.default.createDirectory(at: articleMarkdownDir, withIntermediateDirectories: true)
+            
+        let articleMarkdown = articleMarkdownDir
             .appendingPathComponent(articleNameWithoutExtension, isDirectory: false)
             .appendingPathExtension("md")
+            
         let processCommand = try await Subprocess.run(
             .name("uv"),
             arguments: [
@@ -71,5 +94,37 @@ struct Repository {
         guard processCommand.terminationStatus == .exited(0) else {
             throw AppError.failedToProcessArticle(name: article.name)
         }
+        
+        // Inject Frontmatter
+        try injectFrontmatter(article.frontmatter, into: articleMarkdown)
+    }
+    
+    private func injectFrontmatter(_ frontmatter: RepoConfig.Frontmatter, into fileURL: URL) throws {
+        var content = try String(contentsOf: fileURL, encoding: .utf8)
+        
+        var yamlLines = ["---"]
+        if let title = frontmatter.title { yamlLines.append("title: '\(title)'") }
+        if let pubDate = frontmatter.pubDate { yamlLines.append("pubDate: \(pubDate)") }
+        if let desc = frontmatter.description { yamlLines.append("description: '\(desc)'") }
+        if let author = frontmatter.author { yamlLines.append("author: '\(author)'") }
+        
+        if let image = frontmatter.image {
+            yamlLines.append("image:")
+            yamlLines.append("    url: '\(image.url)'")
+            yamlLines.append("    alt: '\(image.alt)'")
+        }
+        
+        if let tags = frontmatter.tags {
+            // Simple JSON serialization for array
+            let tagsString = tags.map { "\"\($0)\"" }.joined(separator: ", ")
+            yamlLines.append("tags: [\(tagsString)]")
+        }
+        
+        yamlLines.append("---\n\n")
+        
+        let yamlHeader = yamlLines.joined(separator: "\n")
+        content = yamlHeader + content
+        
+        try content.write(to: fileURL, atomically: true, encoding: .utf8)
     }
 }

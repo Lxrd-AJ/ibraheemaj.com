@@ -5,9 +5,27 @@
 		"articleMetadata": {
 			"theme": "computer-vision"
 		},
+        "defaults": {
+            "author": "AJ Ibraheem",
+            "tags": ["computer-vision", "deep-learning", "transformers"],
+            "image": {
+                "url": "https://docs.astro.build/assets/rose.webp",
+                "alt": "Vision Transformers"
+            }
+        },
 		"notebooks": [
-			"vit-patch-embedding.ipynb",
-			"vit-cifar10.ipynb"
+            {
+                "file": "vit-patch-embedding.ipynb",
+                "title": "Understanding Vision Transformer Patch Embeddings",
+                "pubDate": "2023-10-01",
+                "description": "A deep dive into how images are split into patches for Vision Transformers."
+            },
+            {
+                "file": "vit-cifar10.ipynb",
+                "title": "Vision Transformers on CIFAR-10",
+                "pubDate": "2023-10-15",
+                "description": "Training a Vision Transformer on the CIFAR-10 dataset."
+            }
 		]
 	}
 ]
