@@ -1,38 +1,53 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
+
+// Load all posts from the posts directory (md, mdx, astro)
+const modules = import.meta.glob('./posts/**/*.{md,mdx,astro}');
+const posts = Object.entries(modules).map(([path, mod]) => {
+	// Extract slug from the file path, respecting nested directories
+	const slug = path
+		.replace('./posts/', '')
+		.replace(/\.(md|mdx|astro)$/, '');
+    return { slug };
+});
 ---
 
 <Layout title="Blog Posts">
-	<main>
-		<Header />
+    <main>
+        <Header />
         
-		<h1>List of all blog posts</h1>
+        <h1>List of all blog posts</h1>
         <p>A work in progress using the AstroJS framework.</p>
         <p>See other posts</p>
+
         <ul>
-            <li><a href="/posts/post-1">Post 1</a></li>
-            <li><a href="/posts/post-2">Post 2</a></li>
-            <li><a href="/posts/post-3">Post 3</a></li>
+            {posts.map(post => (
+                <li>
+                    <a href={`/posts/${post.slug}`}>
+                        {post.slug}
+                    </a>
+                </li>
+            ))}
         </ul>
-	</main>
+    </main>
 </Layout>
 
 <style>
-	main {
-		margin: auto;
-		padding: 1rem;
-		width: 800px;
-		max-width: calc(100% - 2rem);
-		font-size: 20px;
-		line-height: 1.6;
-	}
-	
-	h1 {
-		font-size: 4rem;
-		font-weight: 700;
-		line-height: 1;
-		text-align: center;
-		margin-bottom: 1em;
-	}
+    main {
+        margin: auto;
+        padding: 1rem;
+        width: 800px;
+        max-width: calc(100% - 2rem);
+        font-size: 20px;
+        line-height: 1.6;
+    }
+    
+    h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        margin-bottom: 1em;
+    }
 </style>
