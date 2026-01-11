@@ -1,14 +1,14 @@
 import Foundation
 import Subprocess
 
-struct Repository {
-    let name: String
-    let githubURL: String
-    let theme: BlogTheme?
-    let articles: [Article]
-    var buildDirectory: URL
+public struct Repository {
+    public let name: String
+    public let githubURL: String
+    public let theme: BlogTheme?
+    public let articles: [Article]
+    public var buildDirectory: URL
 
-    init(config: RepoConfig, buildDirectory: URL) {
+    public init(config: RepoConfig, buildDirectory: URL) {
         self.name = config.name
         self.githubURL = config.repo.absoluteString
         self.theme = config.articleMetadata?.theme
@@ -37,7 +37,7 @@ struct Repository {
         self.buildDirectory = buildDirectory
     }
 
-    func clone() async throws {
+    public func clone() async throws {
         let gitCloneResult = try await Subprocess.run(
             .name("git"), 
             arguments: ["clone", self.githubURL, self.buildDirectory.path()],
@@ -49,7 +49,7 @@ struct Repository {
         }
     }
 
-    func processArticles(markdownScript conversionScript: String) async throws {
+    public func processArticles(markdownScript conversionScript: String) async throws {
         for (idx, article) in articles.enumerated() {
             print("\t -> [\(idx+1)/\(self.articles.count)] Processing article: \(article.name)")
             try await processArticle(article, using: conversionScript)
@@ -99,7 +99,7 @@ struct Repository {
         try injectFrontmatter(article.frontmatter, into: articleMarkdown)
     }
     
-    private func injectFrontmatter(_ frontmatter: RepoConfig.Frontmatter, into fileURL: URL) throws {
+    public func injectFrontmatter(_ frontmatter: RepoConfig.Frontmatter, into fileURL: URL) throws {
         var content = try String(contentsOf: fileURL, encoding: .utf8)
         
         var yamlLines = ["---"]

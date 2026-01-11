@@ -1,24 +1,24 @@
 import Foundation
-import ArgumentParser
 import Subprocess
 
-let BUILD_DIR = URL(fileURLWithPath: ".build-repos", isDirectory: true)
+public let BUILD_DIR = URL(fileURLWithPath: ".build-repos", isDirectory: true)
 
-enum AppError: Error {
+public enum AppError: Error {
     case failedToClone(url: String)
     case failedToProcessArticle(name: String)
 }
 
-@main
-struct App: AsyncParsableCommand {
+public struct BlogBotRunner{
 
-    @Option(help: "Path to a list of repos to process.")
-    public var reposFile: String
-
-    @Option(help: "Path to the markdown conversion script.")
+    public var reposFile: String = ""
     public var conversionScript: String = "tools/convert-notebooks/main.py"
 
-    mutating func run() async throws {
+    public init(reposFile: String, conversionScript: String) {
+        self.reposFile = reposFile
+        self.conversionScript = conversionScript
+    }
+
+    public func run() async throws {
         #if DEBUG
         let debugBanner = String(repeating: "*", count: 10)
         print("\(debugBanner) [DEBUG mode] \(debugBanner)")

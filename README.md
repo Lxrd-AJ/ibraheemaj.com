@@ -6,9 +6,9 @@
 * Development: Run 
 
 ```bash
-swift run 
-    --package-path tools/blogbot 1bbb 
-    --repos-file articles.json 
+swift run \
+    --package-path tools/blogbot 1bbb \
+    --repos-file articles.json \
     --conversion-script tools/convert-notebooks/main.py
 ```
 

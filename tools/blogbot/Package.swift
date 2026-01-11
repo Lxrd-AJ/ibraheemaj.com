@@ -13,13 +13,22 @@ let package = Package(
         .executableTarget(
             name: "1bbb",
             dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "Subprocess", package: "swift-subprocess")
+                "BlogBotCore"
             ],
             swiftSettings: [
                 .define("DEBUG", .when(configuration: .debug))
-            ],
+            ]
         ),
-    ],
-    
+        .target(
+            name: "BlogBotCore",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Subprocess", package: "swift-subprocess")
+            ]
+        ),
+        .testTarget(
+            name: "BlogBotCoreTests",
+            dependencies: ["BlogBotCore"]
+        )
+    ]
 )
